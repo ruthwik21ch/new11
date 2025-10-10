@@ -1,0 +1,84 @@
+Implemented Dijkstras Algorithm to compute the shortest path through a network.
+[Multiple diagrams of network nodes A-H with weighted edges, not shown in code.]
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_NODES 1024
+#define INFINITY 1000
+
+int n = 8, cost = 0, dist[8][8] = {
+    {0,12,0,1,0,0,0,8},
+    {0,2,0,1,0,0,3,0},
+    {0,17,0,3,0,30,0,0},
+    {0,0,7,0,1,0,23,0},
+    {0,20,0,0,2,1,1,0},
+    {7,0,1,0,2,1,0,12},
+    {0,0,0,0,2,1,0,0},
+    {6,0,0,0,10,0,4,3}
+};
+
+typedef struct {
+    int pre;
+    int length;
+    int label;
+} State;
+
+int shortest_dist(int s, int t, int path[]) {
+    int i,k,min;
+    State state[1024];
+    State *p;
+
+    for (p = &state[0]; p < &state[n]; p++) {
+        p->pre = -1;
+        p->length = INFINITY;
+        p->label = 0;
+    }
+
+    state[0].length = 0;
+    state[0].label = 1;
+    state[0].pre = -1;
+    k = t; // destination index
+
+    do {
+        for (i = 0; i < n; i++) {
+            if (dist[k][i] != 0 && state[i].label == 0) {
+                state[i].pre = k;
+                state[i].length = state[k].length + dist[k][i];
+            }
+        }
+
+        min = INFINITY;
+        for (i = 0; i < n; i++) {
+            if (state[i].label == 0 && state[i].length < min) {
+                min = state[i].length;
+                k = i;
+            }
+        }
+        state[k].label = 1;
+    } while (k != s);
+
+    i = 0; k = s;
+    do {
+        path[i++] = k;
+        k = state[k].pre;
+        cost += state[k].length;
+    } while (k >= 0);
+
+    return cost;
+}
+
+void main() {
+    int i, j, m, path[102], q, p;
+    printf("Enter number of nodes (1-8): ");
+    scanf("%d", &n);
+    printf("Enter source vertex (1-8): ");
+    scanf("%d", &p);
+    printf("Enter destination vertex (1-8): ");
+    scanf("%d", &q);
+
+    m = shortest_dist(q - 1, p - 1, path);
+
+    for (i = 0; i < m; i++) {
+        printf("%c -> ", path[i] + 'A');
+    }
+    printf("\nCost is: %d\n", cost);
+}
