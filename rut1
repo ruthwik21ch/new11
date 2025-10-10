@@ -1,0 +1,169 @@
+#include <stdio.h>
+#include <string.h>
+
+char input[10][20];
+
+int get_input();
+void make_frames(int);
+int count_char(int);
+
+void main()
+{
+    int nof_words;
+    nof_words = get_input();
+    make_frames(nof_words);
+}
+
+int get_input()
+{
+    int answer;
+    int i = 0;
+    do
+    {
+        printf("\nEnter the word: ");
+        scanf("%s", input[i]);
+        fflush(stdin);
+        printf("Do you want to continue? (Yes:1 or No:0): ");
+        scanf("%d", &answer);
+        i++;
+    } while (answer != 0);
+    return i;
+}
+
+void make_frames(int num_words)
+{
+    int i = 0;
+    printf("\nTransmitted Data is:\n\n");
+    for (i = 0; i < num_words; i++)
+    {
+        printf("%d %s\n", count_char(i) + 1, input[i]);
+        printf("\n");
+    }
+}
+
+int count_char(int index)
+{
+    int i = 0;
+    while (input[index][i] != '\0')
+        i++;
+    return i;
+}
+
+
+
+
+Program: Bit stuffing
+
+#include <stdio.h>
+#include <conio.h>
+#include <string.h>
+void main()
+{
+    int i, j, count=0, n1;
+    char str[100];
+    printf("Enter the Bit String:");
+    gets(str);
+    for(i=0; i<strlen(str); i++)
+    {
+        count=0;
+        //The following code search the six ones in given string
+        for(j=i; j<(i+6); j=j+1)
+        {
+            if(str[j]=='1')
+                count = count + 1;
+        }
+        //if there is six ones then following code execute to bit stuffing
+        if(count==6)
+        {
+            n1 = strlen(str) + 2;
+            for(; n1>=(i+5); n1--)
+            {
+str[n1] = str[n1-1];
+            }
+        str[i+5] = '0';
+        i = i + 7;
+        }
+    }
+    puts(str);
+    getch();
+}
+
+
+
+// Byte Stuffing Program
+
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
+
+void main()
+{
+    int j, i, m, c, k;
+    char a[50], b[50];
+
+    printf("Enter the storing in: ");
+    scanf("%s", a);
+
+    strcpy(b, "DLESTX");
+    m = strlen(a);
+
+    for (j = 0; j < m; j++)
+    {
+        if (a[j] == 'd')
+        {
+            if (a[j+1] == '1')
+            {
+                if (a[j+2] == 'e')
+                {
+                    c = j + 2;
+                    for (i = 0; i < 3; i++)
+                    {
+                        for (k = m; k > c; k--)
+                        {
+                            a[k] = a[k-1];
+                        }
+                        m++;
+                    }
+                    a[j+3] = 'd';
+                    a[j+4] = '1';
+                    a[j+5] = 'e';
+                    m = m + 3;
+                    j += 5;
+                }
+            }
+        }
+    }
+
+    strcat(b, a);
+    strcat(b, "DLEETX");
+    printf("\n%s", b);
+
+    printf("\nReceiver side:\n");
+    m = strlen(a);
+
+    for (j = 0; j < m; j++)
+    {
+        if (a[j] == 'd')
+        {
+            if (a[j+1] == '1')
+            {
+                if (a[j+2] == 'e')
+                {
+                    c = j;
+                    for (i = 0; i < 3; i++)
+                    {
+                        for (k = c; k < m; k++)
+                        {
+                            a[k] = a[k+1];
+                        }
+                        c++;
+                    }
+                    j = c;
+                }
+            }
+        }
+    }
+
+    printf("\n%s", a);
+    getch();
+}
